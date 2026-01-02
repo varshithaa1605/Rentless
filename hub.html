@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Hub | RentLess</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .reveal-box { background: rgba(99, 102, 241, 0.05); border: 1px dashed rgba(99, 102, 241, 0.3); cursor: pointer; transition: 0.3s; }
+        .reveal-box:hover { background: rgba(99, 102, 241, 0.15); border-color: #6366f1; }
+        .rules-card { background: linear-gradient(145deg, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0) 100%); border: 1px solid rgba(239, 68, 68, 0.2); }
+    </style>
+</head>
+<body class="p-6">
+
+    <nav class="flex justify-between items-center mb-8">
+        <button onclick="window.location.href='index.html'" class="text-gray-400"><i class="fas fa-arrow-left text-xl"></i></button>
+        <h1 class="text-xl font-black italic">My <span class="text-indigo-500">Subscriptions</span></h1>
+        <div id="userInitials" class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-[12px] font-black border-2 border-indigo-400/30 text-white">AS</div>
+    </nav>
+
+    <div id="noSubs" class="hidden text-center py-20">
+        <i class="fas fa-box-open text-5xl text-gray-700 mb-4"></i>
+        <p class="text-gray-500">No active slots found.</p>
+    </div>
+
+    <div id="subsContainer" class="space-y-6 max-w-md mx-auto">
+        </div>
+
+    <script>
+        function loadSubs() {
+            // Update Initials from Login Data
+            const userData = JSON.parse(localStorage.getItem('currentUser'));
+            if (userData && userData.name) {
+                const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').innerText = initials;
+            }
+
+            const data = localStorage.getItem('lastPurchase');
+            const container = document.getElementById('subsContainer');
+            const empty = document.getElementById('noSubs');
+
+            if (!data) {
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            const sub = JSON.parse(data);
+            
+            // Dummy credentials
+            const email = sub.name.toLowerCase().replace(' ', '.') + "@student.edu";
+            const pass = "RentLess" + Math.floor(1000 + Math.random() * 9000);
+            const pin = Math.floor(1000 + Math.random() * 9000); // New Profile PIN
+
+            container.innerHTML = `
+                <div class="glass p-6 rounded-[2.5rem] border-indigo-500/30 border-2 shadow-2xl shadow-indigo-500/10">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="font-black text-3xl tracking-tighter">${sub.name}</h3>
+                            <p class="text-[10px] text-indigo-400 font-bold uppercase mt-1 tracking-widest">Shared Account Access</p>
+                        </div>
+                        <span class="bg-green-500/20 text-green-400 text-[10px] font-black px-4 py-1.5 rounded-full border border-green-500/30 uppercase tracking-tighter">Verified Access</span>
+                    </div>
+
+                    <div class="space-y-3 mb-8">
+                        <div class="p-4 rounded-2xl reveal-box text-center group" onclick="this.querySelector('span').innerText='${email}'; this.querySelector('span').classList.add('text-indigo-400')">
+                            <p class="text-[9px] text-gray-500 font-black uppercase mb-1 tracking-widest">Login Email</p>
+                            <span class="text-sm font-bold font-mono transition-all">TAP TO REVEAL</span>
+                        </div>
+                        
+                        <div class="p-4 rounded-2xl reveal-box text-center group" onclick="this.querySelector('span').innerText='${pass}'; this.querySelector('span').classList.add('text-indigo-400')">
+                            <p class="text-[9px] text-gray-500 font-black uppercase mb-1 tracking-widest">Password</p>
+                            <span class="text-sm font-bold font-mono transition-all">TAP TO REVEAL</span>
+                        </div>
+
+                        <div class="p-4 rounded-2xl reveal-box text-center group border-indigo-500/50" onclick="this.querySelector('span').innerText='${pin}'; this.querySelector('span').classList.add('text-indigo-400')">
+                            <p class="text-[9px] text-gray-500 font-black uppercase mb-1 tracking-widest italic">Your Profile PIN (Mandatory)</p>
+                            <span class="text-sm font-bold font-mono transition-all">TAP TO REVEAL PIN</span>
+                        </div>
+                    </div>
+
+                    <div class="rules-card p-5 rounded-3xl mb-8">
+                        <h4 class="text-red-500 text-[11px] font-black uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <i class="fas fa-shield-halved"></i> Rules of the House
+                        </h4>
+                        <ul class="text-[11px] text-gray-400 space-y-2 font-medium">
+                            <li class="flex gap-2"><span>•</span> <span>Don't change the <b>Account Language</b> or <b>Password</b>.</span></li>
+                            <li class="flex gap-2"><span>•</span> <span>Use only <b>ONE</b> screen at a time.</span></li>
+                            <li class="flex gap-2"><span>•</span> <span>Do not edit other users' profiles.</span></li>
+                            <li class="flex gap-2"><span>•</span> <span>Bypass detected? Permanent BAN without refund.</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="window.location.href='helpline.html'" class="bg-indigo-600 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/20">
+        <i class="fas fa-hand-holding-medical mr-2 text-sm"></i>Bhai Help Chahiye
+    </button>
+                        <button onclick="confirm('Report this account for issues?')" class="bg-white/5 text-gray-400 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/10">
+                            <i class="fas fa-flag mr-2 text-sm"></i>Report
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        loadSubs();
+    </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentLess | Join the Student Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .hero-gradient { background: radial-gradient(circle at center, #4f46e5 0%, transparent 70%); opacity: 0.15; }
+        .animate-scroll { animation: scroll 20s linear infinite; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        #onboardingModal { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .input-field { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 16px; width: 100%; outline: none; transition: 0.3s; font-size: 14px; color: white; }
+        .input-field:focus { border-color: #6366f1; background: rgba(255,255,255,0.08); }
+        
+        .required-star { color: #ef4444; margin-left: 2px; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <div class="fixed top-0 left-0 w-full h-full hero-gradient pointer-events-none"></div>
+
+    <nav class="flex justify-between items-center px-6 py-8 sticky top-0 z-50 glass border-b border-white/5">
+        <div class="text-4xl font-black tracking-tighter italic">Rent<span class="text-indigo-500">Less</span></div>
+    </nav>
+
+    <header class="relative pt-12 pb-12 px-6 text-center">
+        <div class="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-[10px] font-bold text-indigo-400 border-indigo-500/20 mb-8 uppercase tracking-widest">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Verified Student Network
+        </div>
+
+        <h1 class="text-6xl font-black tracking-tight leading-[1.1] mb-6">
+            Luxury OTT. <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 italic font-extrabold text-7xl">Maggi Pricing.</span>
+        </h1>
+
+        <p class="text-gray-400 text-sm max-w-sm mx-auto mb-10 leading-relaxed">
+            Stop being the "Account Admin" friend. Join RentLess to split bills automatically via UPI. No awkward <span class="text-white italic">"Bhai paise de de"</span> chats.
+        </p>
+
+        <div class="flex flex-col gap-3 max-w-sm mx-auto">
+            <button onclick="openOnboarding()" class="group relative w-full bg-indigo-600 py-6 rounded-[2rem] font-black text-xl shadow-2xl shadow-indigo-500/40 hover:scale-[1.05] transition-all overflow-hidden border-t border-indigo-400/50">
+                <span class="relative z-10">Apna Login Lo</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="px-6 py-10">
+        <div class="glass rounded-[2.5rem] overflow-hidden border-white/10 shadow-2xl">
+            <div class="p-6 bg-indigo-600/10 border-b border-white/5">
+                <h4 class="font-black text-sm uppercase tracking-widest italic text-center">The Savings Ledger</h4>
+            </div>
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-gray-500 border-b border-white/5 uppercase text-[9px] tracking-widest">
+                        <th class="p-5">Platform</th>
+                        <th class="p-5">Normal</th>
+                        <th class="p-5 text-indigo-400">RentLess</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5 font-medium">
+    <tr>
+        <td class="p-5 flex items-center gap-3">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" 
+                 class="h-5 md:h-6 object-contain brightness-110" alt="Netflix">
+        </td>
+        <td class="p-5 text-sm text-gray-400 italic font-semibold">₹649</td>
+        <td class="p-5 font-black text-indigo-400 text-lg">₹162</td>
+    </tr>
+    <tr>
+        <td class="p-5 flex items-center gap-3">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Disney%2B_Hotstar_logo.svg" 
+                 class="h-7 md:h-8 object-contain brightness-125" alt="Hotstar">
+        </td>
+        <td class="p-5 text-sm text-gray-400 italic font-semibold">₹299</td>
+        <td class="p-5 font-black text-indigo-400 text-lg">₹75</td>
+    </tr>
+    <tr>
+        <td class="p-5 flex items-center gap-3">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" 
+                 class="h-5 md:h-6 object-contain" alt="YouTube">
+        </td>
+        <td class="p-5 text-sm text-gray-400 italic font-semibold">₹189</td>
+        <td class="p-5 font-black text-indigo-400 text-lg">₹32</td>
+    </tr>
+</tbody>
+            </table>
+        </div>
+    </section>
+
+    <div id="onboardingModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-300">
+        <div class="glass w-[95%] max-w-md p-8 rounded-[3rem] border-white/20 relative shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
+            
+            <div class="text-center mb-8">
+                <div class="text-2xl font-black italic mb-2">Create <span class="text-indigo-500">Account</span></div>
+                <p class="text-gray-400 text-[11px] uppercase tracking-widest font-bold">Verification Mandatory <span class="required-star">*</span></p>
+            </div>
+
+            <form onsubmit="event.preventDefault(); handleLogin();" id="registrationForm" class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-500 uppercase ml-2 mb-1 block">Full Name <span class="required-star">*</span></label>
+                    <input type="text" id="userName" placeholder="Enter your full name" class="input-field" required>
+                </div>
+                
+                <div>
+                    <label class="text-[10px] font-bold text-gray-500 uppercase ml-2 mb-1 block">College Name <span class="required-star">*</span></label>
+                    <input type="text" id="userCollege" placeholder="e.g. IIT Delhi, DU, Christ" class="input-field" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase ml-2 mb-1 block">City <span class="required-star">*</span></label>
+                        <input type="text" id="userCity" placeholder="e.g. Delhi" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase ml-2 mb-1 block">Degree Year <span class="required-star">*</span></label>
+                        <select id="userYear" class="input-field bg-[#111] text-gray-400 cursor-pointer" required>
+                            <option value="" disabled selected>Select Year</option>
+                            <option>1st Year</option>
+                            <option>2nd Year</option>
+                            <option>3rd Year</option>
+                            <option>4th Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-500 uppercase ml-2 mb-1 block">College ID Photo <span class="required-star">*</span></label>
+                    <label for="id-upload" id="drop-area" class="input-field border-dashed border-2 flex flex-col items-center justify-center py-8 cursor-pointer hover:bg-white/5 transition-all relative">
+                        <i id="upload-icon" class="fas fa-cloud-upload-alt text-indigo-400 text-2xl mb-2"></i>
+                        <p id="upload-text" class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter text-center px-4">Tap to Upload Student ID</p>
+                        <p id="file-name" class="text-[9px] text-green-400 mt-2 font-bold hidden italic"></p>
+                        
+                        <input type="file" id="id-upload" accept="image/*" class="hidden" onchange="handleFileUpload(this)">
+                    </label>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-500/30 hover:bg-indigo-500 transition-all uppercase tracking-widest text-xs">
+                        Complete Verification
+                    </button>
+                </div>
+            </form>
+
+            <p class="text-center text-[9px] text-gray-600 mt-6 px-4 uppercase tracking-tighter italic font-bold">
+                Fake IDs result in a permanent ban from the network.
+            </p>
+        </div>
+    </div>
+	<footer class="mt-20 px-6 pb-12 border-t border-white/5 pt-12">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+            
+            <div class="max-w-xs">
+                <div class="text-2xl font-black tracking-tighter italic mb-3">
+                    Rent<span class="text-indigo-500">Less</span>
+                </div>
+                <p class="text-gray-500 text-[11px] leading-relaxed font-medium uppercase tracking-tighter">
+                    India's first community-driven OTT splitting platform for students. Save more, watch more.
+                </p>
+            </div>
+
+            <div class="flex gap-8">
+                <div class="flex flex-col gap-2">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2 text-center md:text-left">Company</p>
+                    <a href="#" class="text-[11px] text-gray-500 hover:text-white transition-all font-bold uppercase italic">Terms</a>
+                    <a href="#" class="text-[11px] text-gray-500 hover:text-white transition-all font-bold uppercase italic">Privacy</a>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2 text-center md:text-left">Social</p>
+                    <a href="#" class="text-[11px] text-gray-500 hover:text-white transition-all font-bold uppercase italic">Instagram</a>
+                    <a href="#" class="text-[11px] text-gray-500 hover:text-white transition-all font-bold uppercase italic">Discord</a>
+                </div>
+            </div>
+
+            <div class="glass px-6 py-4 rounded-2xl flex items-center gap-3">
+                <div class="w-8 h-8 bg-green-500/10 rounded-full flex items-center justify-center">
+                    <i class="fas fa-shield-heart text-green-500 text-xs"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black uppercase tracking-tighter">Secure & Verified</p>
+                    <p class="text-[8px] text-gray-500 uppercase tracking-tighter">By Student Community</p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-white/5 my-10">
+
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">
+                © 2026 RentLess Network. All Rights Reserved.
+            </p>
+            
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest italic">Made with</span>
+                <i class="fas fa-heart text-red-500 text-[10px] animate-pulse"></i>
+                <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest italic font-black">In India for Students</span>
+            </div>
+        </div>
+    </div>
+</footer>
+	
+
+    <script>
+
+
+        function openOnboarding() {
+            document.getElementById('onboardingModal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function handleFileUpload(input) {
+            const uploadArea = document.getElementById('drop-area');
+            const uploadText = document.getElementById('upload-text');
+            const fileNameText = document.getElementById('file-name');
+            const uploadIcon = document.getElementById('upload-icon');
+
+            if (input.files && input.files[0]) {
+                uploadArea.style.borderColor = "#22c55e"; 
+                uploadArea.style.backgroundColor = "rgba(34, 197, 94, 0.05)";
+                uploadIcon.classList.replace('fa-cloud-upload-alt', 'fa-check-circle');
+                uploadIcon.style.color = "#22c55e";
+                uploadText.innerText = "ID ATTACHED SUCCESSFULLY";
+                uploadText.style.color = "#22c55e";
+                fileNameText.innerText = "Selected: " + input.files[0].name;
+                fileNameText.classList.remove('hidden');
+            }
+        }
+
+        function handleLogin() {
+            const name = document.getElementById('userName').value;
+            const college = document.getElementById('userCollege').value;
+            const city = document.getElementById('userCity').value;
+            const year = document.getElementById('userYear').value;
+            const idUpload = document.getElementById('id-upload');
+
+            // Explicitly check for file upload
+            if (!name || !college || !city || !year || idUpload.files.length === 0) {
+                alert("Please upload your Student ID and fill all fields to continue.");
+                return;
+            }
+
+            const userData = { name: name, college: college, city: city, year: year };
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            window.location.href = 'payment.html';
+        }
+		
+    </script>
+
+</body>
+</html>

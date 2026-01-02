@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helpline | RentLess</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .issue-card { transition: 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .issue-card:hover { background: rgba(99, 102, 241, 0.1); border-color: #6366f1; transform: translateY(-2px); }
+    </style>
+</head>
+<body class="p-6">
+
+    <nav class="flex items-center gap-4 mb-8">
+        <button onclick="window.history.back()" class="text-gray-400"><i class="fas fa-arrow-left text-xl"></i></button>
+        <h1 class="text-xl font-black italic">Support <span class="text-indigo-500">Center</span></h1>
+    </nav>
+
+    <div class="max-w-md mx-auto">
+        <div class="text-center mb-10">
+            <div class="w-20 h-20 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-indigo-500/30">
+                <i class="fas fa-headset text-3xl text-indigo-500"></i>
+            </div>
+            <h2 class="text-2xl font-bold italic">Kya hua bhai?</h2>
+            <p class="text-gray-500 text-xs mt-2 uppercase tracking-widest">Select your issue for instant resolution</p>
+        </div>
+
+        <div class="space-y-3">
+            <div onclick="window.location.href='https://wa.me/YOUR_NUMBER?text=Bhai login nahi ho raha'" class="glass p-5 rounded-3xl issue-card flex items-center gap-4">
+                <div class="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center text-red-500">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm">Login Nahi Ho Raha</h4>
+                    <p class="text-[10px] text-gray-500">Password galat dikha raha hai</p>
+                </div>
+            </div>
+
+            <div onclick="window.location.href='https://wa.me/YOUR_NUMBER?text=Bhai screen limit full hai'" class="glass p-5 rounded-3xl issue-card flex items-center gap-4">
+                <div class="w-12 h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center text-yellow-500">
+                    <i class="fas fa-tv"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm">Too Many Screens</h4>
+                    <p class="text-[10px] text-gray-500">Saare slots occupied hain</p>
+                </div>
+            </div>
+
+            <div onclick="window.location.href='https://wa.me/YOUR_NUMBER?text=Bhai slot renew karna hai'" class="glass p-5 rounded-3xl issue-card flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-500">
+                    <i class="fas fa-rotate"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm">Renew My Slot</h4>
+                    <p class="text-[10px] text-gray-500">Subscription khatam ho gayi</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 p-6 glass rounded-[2rem] border-dashed border-indigo-500/20 text-center">
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-4">Urgent Matters Only</p>
+            <a href="https://wa.me/YOUR_NUMBER" class="inline-flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-green-500/20">
+                <i class="fab fa-whatsapp text-lg"></i> WhatsApp Admin
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentLess | Student Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; padding-bottom: 110px; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .payment-sheet { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(100%); }
+        .payment-sheet.active { transform: translateY(0); }
+        select { background-color: #0a0a0a !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; appearance: none; padding-right: 20px; }
+        option { background: #0a0a0a; color: white; }
+        .upi-pin-dot { width: 14px; height: 14px; border: 2px solid #6366f1; border-radius: 50%; }
+        .upi-pin-dot.filled { background: #6366f1; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <nav class="sticky top-0 z-50 glass border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <div>
+            <span class="text-2xl font-black text-white italic tracking-tighter">Rent<span class="text-indigo-500">Less</span></span>
+            <div class="flex items-center gap-2 mt-1">
+                <i class="fas fa-location-dot text-indigo-500 text-[10px]"></i>
+                <select id="citySelector" onchange="updateCity()" class="text-[10px] font-bold uppercase tracking-widest outline-none cursor-pointer rounded-lg px-2 py-1">
+                    <option value="Mangalore" selected>Mangalore</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi (NCR)">Delhi (NCR)</option>
+                    <option value="Bengaluru">Bengaluru</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Ahmedabad">Ahmedabad</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Jaipur">Jaipur</option>
+                    <option value="Lucknow">Lucknow</option>
+                    <option value="Kochi">Kochi</option>
+                    <option value="Indore">Indore</option>
+                    <option value="Surat">Surat</option>
+                    <option value="Nagpur">Nagpur</option>
+                </select>
+            </div>
+        </div>
+        <div onclick="window.location.href='hub.html'" id="userInitials" class="w-10 h-10 rounded-2xl bg-indigo-600 border border-indigo-400 flex items-center justify-center text-white font-black cursor-pointer">AS</div>
+    </nav>
+
+    <main class="p-6 space-y-6">
+        <h2 id="marketTitle" class="text-xs font-black text-indigo-400 uppercase tracking-[0.3em]">Slots in Mangalore</h2>
+        <div id="subsGrid" class="grid grid-cols-1 gap-4"></div>
+    </main>
+
+    <footer class="fixed bottom-0 left-0 w-full glass border-t border-white/10 px-8 py-4 flex justify-center items-center z-[60]">
+        <button onclick="openHostModal()" class="bg-indigo-600 w-16 h-16 rounded-full -mt-12 border-4 border-[#050505] shadow-2xl flex flex-col items-center justify-center text-white transition-transform active:scale-90">
+            <i class="fas fa-plus text-xl"></i>
+            <span class="text-[8px] font-black uppercase mt-1">Host</span>
+        </button>
+    </footer>
+
+    <div id="hostModal" class="fixed inset-0 z-[300] bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none transition-all flex items-center justify-center p-6">
+        <div class="glass w-full max-w-md p-8 rounded-[3rem] border-white/20 relative">
+            <button onclick="closeHostModal()" class="absolute top-6 right-8 text-gray-500"><i class="fas fa-times text-xl"></i></button>
+            <h2 class="text-2xl font-black italic mb-6">Host <span class="text-indigo-500">Subscription</span></h2>
+            <form class="space-y-4" onsubmit="event.preventDefault(); alert('Request Submitted!'); closeHostModal();">
+                <input type="text" placeholder="App Name (e.g. Netflix)" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none" required>
+                <input type="number" placeholder="Price per month" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none" required>
+                <button type="submit" class="w-full bg-indigo-600 py-4 rounded-2xl font-black uppercase tracking-widest text-xs">Post Listing</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="paymentSheet" class="absolute bottom-0 left-0 w-full glass rounded-t-[3rem] border-t border-white/20 p-8 payment-sheet">
+            <div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-8"></div>
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 id="pay-sub-name" class="text-3xl font-black italic text-white">Netflix</h2>
+                    <p id="pay-admin-name" class="text-xs text-indigo-400 font-bold mt-1 uppercase"></p>
+                </div>
+                <div class="text-right font-black text-3xl">₹<span id="pay-amount">0</span></div>
+            </div>
+            <button onclick="showUPIScreen()" class="w-full bg-indigo-600 py-6 rounded-3xl font-black text-lg active:scale-95 transition-all">Proceed to Pay</button>
+        </div>
+    </div>
+
+    <div id="upiPinScreen" class="fixed inset-0 z-[200] bg-[#050505] flex flex-col items-center justify-between p-10 hidden">
+        <div class="w-full flex justify-between items-center">
+            <i class="fas fa-shield-alt text-indigo-500 text-2xl"></i>
+            <p class="text-sm font-bold tracking-widest uppercase">ENTER UPI PIN</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" class="h-4 brightness-200">
+        </div>
+        <div class="flex gap-6 my-10">
+            <div class="upi-pin-dot" id="dot-1"></div>
+            <div class="upi-pin-dot" id="dot-2"></div>
+            <div class="upi-pin-dot" id="dot-3"></div>
+            <div class="upi-pin-dot" id="dot-4"></div>
+        </div>
+        <div class="grid grid-cols-3 gap-8 w-full max-w-xs text-center pb-10">
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">1</button>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">2</button>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">3</button>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">4</button>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">5</button>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">6</button>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">7</button>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">8</button>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">9</button>
+            <div class="p-4"></div>
+            <button onclick="pressKey()" class="text-3xl font-bold p-4 text-white">0</button>
+            <button onclick="confirmUPI()" class="text-green-500 p-4"><i class="fas fa-check-circle text-4xl"></i></button>
+        </div>
+    </div>
+
+    <div id="successScreen" class="fixed inset-0 z-[300] bg-green-600 flex flex-col items-center justify-center text-center p-10 hidden">
+        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-green-600 text-5xl mb-6"><i class="fas fa-check"></i></div>
+        <h2 class="text-4xl font-black italic text-white mb-8">Payment Successful</h2>
+        <button onclick="window.location.href='hub.html'" class="bg-black text-white px-10 py-4 rounded-full font-black uppercase text-xs">Open Hub</button>
+    </div>
+
+    <script>
+        const cityData = {
+            "Mangalore": ["NITK Surathkal", "KMC Mangalore", "St. Aloysius", "Sahyadri Eng", "Nitte NMAMIT", "Father Muller", "Yenepoya", "St. Agnes", "AJ Institute", "Srinivas University"],
+            "Mumbai": ["IIT Bombay", "St. Xavier's", "NMIMS", "HR College", "VJTI", "Mithibai", "Sophia College", "Jai Hind", "ICT Mumbai", "Wilson College"],
+            "Delhi (NCR)": ["IIT Delhi", "SRCC", "Hindu College", "Amity Noida", "NSUT", "DTU", "JNU", "Miranda House", "Stephens", "Jamia Millia"],
+            "Bengaluru": ["IISc", "RV College", "PES University", "Christ University", "MS Ramaiah", "BMSCE", "Mount Carmel", "St. Joseph's", "MIT Bengaluru", "Reva University"],
+            "Hyderabad": ["IIT Hyderabad", "BITS Pilani Hyd", "Osmania Univ", "CBIT", "JNTU", "ISB", "Vasavi Eng", "VNRVJIET", "Gitam Hyd", "Loyola Academy"],
+            "Chennai": ["IIT Madras", "Anna University", "Loyola Chennai", "SRM KTR", "VIT Chennai", "MCC", "Stella Maris", "Sathyabama", "SSN College", "Hindustan Univ"],
+            "Pune": ["COEP Pune", "Fergusson", "Symbiosis", "PICT", "MIT-WPU", "SPPU", "VIT Pune", "Cummins Eng", "AISSMS", "D.Y. Patil"],
+            "Kolkata": ["IIT Kharagpur", "St. Xavier's Kol", "Jadavpur Univ", "Presidency", "Heritage IT", "Bethune College", "Goenka", "Scottish Church", "IEM Kol", "Loreto"],
+            "Ahmedabad": ["IIM Ahmedabad", "Nirma University", "CEPT", "DA-IICT", "LD Engineering", "PDPU", "HL College", "St. Xavier's AD", "Gujarat Univ", "IIT Gandhinagar"],
+            "Chandigarh": ["PEC Chandigarh", "Panjab University", "Chandigarh Univ", "SD College", "DAV Chandigarh", "MCM DAV", "CGC Landran", "Chitkara", "UIET", "NITTTR"],
+            "Jaipur": ["MNIT Jaipur", "Manipal Jaipur", "LNMIIT", "Banasthali", "Maharani College", "SKIT", "JECRC", "Rajasthan Univ", "Poornima", "St. Xavier's JP"],
+            "Lucknow": ["IIM Lucknow", "IIT Kanpur", "Amity LKO", "BBD University", "Integral Univ", "Lucknow University", "KGMU", "SRMCEM", "IET Lucknow", "National PG"],
+            "Kochi": ["CUSAT", "Rajagiri College", "SCMS", "Model Eng College", "St. Teresa's", "Sacred Heart", "Amrita Kochi", "MEC", "AISAT", "St. Alberts"],
+            "Indore": ["IIM Indore", "IIT Indore", "SGSITS", "DAVV", "Medi-Caps", "Acropolis", "IPS Academy", "Prestige Inst", "Renaissance Univ", "Sage Univ"],
+            "Surat": ["SVNIT Surat", "SCET", "VNSGU", "CK Pithawalla", "PP Savani", "Auro University", "SRKI", "Navyug", "MTB Arts", "Sir PT Science"],
+            "Nagpur": ["VNIT Nagpur", "RCOEM", "LIT Nagpur", "YCCE", "G.H. Raisoni", "VNIT", "GMC Nagpur", "Hislop College", "Ramdeobaba", "Priyadarshini"]
+        };
+
+        const names = ["Rahul", "Sneha", "Aryan", "Priya", "Ansh", "Megha", "Karthik", "Ishani", "Varun", "Riya", "Aditya", "Tanisha", "Samir", "Kavya", "Deepak", "Zoya"];
+
+        const subsData = [
+            { name: "Netflix 4K", price: 162, icon: "fab fa-netflix", iconColor: "text-red-600" },
+            { name: "YouTube Premium", price: 32, icon: "fab fa-youtube", iconColor: "text-red-500" },
+            { name: "JioHotstar", price: 75, icon: "fas fa-star", iconColor: "text-blue-400" },
+            { name: "Crunchyroll", price: 25, icon: "fas fa-cat", iconColor: "text-orange-500" },
+            { name: "SonyLIV", price: 49, icon: "fas fa-tv", iconColor: "text-purple-500" },
+            { name: "Amazon Prime", price: 49, icon: "fab fa-amazon", iconColor: "text-cyan-400" },
+            { name: "Spotify", price: 29, icon: "fab fa-spotify", iconColor: "text-green-500" },
+            { name: "Zee5", price: 39, icon: "fas fa-play-circle", iconColor: "text-pink-500" },
+            { name: "Canva Pro", price: 50, icon: "fas fa-palette", iconColor: "text-blue-500" },
+            { name: "ChatGPT Plus", price: 400, icon: "fas fa-robot", iconColor: "text-emerald-400" }
+        ];
+
+        function shuffle(array) {
+            let currentIndex = array.length,  randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function updateCity() {
+            // Update Initials from LocalStorage
+            const userData = JSON.parse(localStorage.getItem('currentUser'));
+            if (userData && userData.name) {
+                const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').innerText = initials;
+            }
+
+            const city = document.getElementById('citySelector').value;
+            document.getElementById('marketTitle').innerText = `Slots in ${city}`;
+            const container = document.getElementById('subsGrid');
+            container.innerHTML = '';
+
+            const colleges = [...cityData[city]];
+            const adminNames = [...names];
+
+            shuffle(colleges);
+            shuffle(adminNames);
+
+            subsData.forEach((sub, i) => {
+                const college = colleges[i % colleges.length];
+                const admin = adminNames[i % adminNames.length];
+                
+                container.innerHTML += `
+                <div class="glass p-5 rounded-[2.5rem] border-white/5">
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-4 items-center">
+                            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10">
+                                <i class="${sub.icon} ${sub.iconColor} text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">${sub.name}</h3>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Admin: ${admin} • ${college}</p>
+                            </div>
+                        </div>
+                        <p class="text-xl font-black">₹${sub.price}</p>
+                    </div>
+                    <button onclick="openPayment('${sub.name}', ${sub.price}, '${admin} (${college})')" class="w-full mt-4 bg-white/10 hover:bg-white hover:text-black py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all">Request Slot</button>
+                </div>`;
+            });
+        }
+
+        function openPayment(name, price, adminInfo) {
+            document.getElementById('pay-sub-name').innerText = name;
+            document.getElementById('pay-amount').innerText = price;
+            document.getElementById('pay-admin-name').innerText = adminInfo;
+            document.getElementById('paymentModal').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('paymentSheet').classList.add('active');
+        }
+
+        function showUPIScreen() {
+            document.getElementById('paymentModal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('upiPinScreen').classList.remove('hidden');
+        }
+
+        let pinCount = 0;
+        function pressKey() { 
+            if(pinCount < 4) { 
+                pinCount++; 
+                document.getElementById(`dot-${pinCount}`).classList.add('filled'); 
+            } 
+        }
+
+        function confirmUPI() { 
+            if(pinCount === 4) { 
+                const subName = document.getElementById('pay-sub-name').innerText;
+                const subPrice = document.getElementById('pay-amount').innerText;
+                const adminInfo = document.getElementById('pay-admin-name').innerText;
+
+                const purchase = { name: subName, price: subPrice, admin: adminInfo };
+                localStorage.setItem('lastPurchase', JSON.stringify(purchase));
+
+                document.getElementById('upiPinScreen').classList.add('hidden'); 
+                document.getElementById('successScreen').classList.remove('hidden'); 
+            } 
+        }
+
+        function openHostModal() { document.getElementById('hostModal').classList.remove('opacity-0', 'pointer-events-none'); }
+        function closeHostModal() { document.getElementById('hostModal').classList.add('opacity-0', 'pointer-events-none'); }
+
+        updateCity(); 
+    </script>
+</body>
+</html>
